@@ -1,0 +1,26 @@
+---
+version: "3.8"
+services:
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - VERSION=docker
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,video,utility
+    volumes:
+      - /home/plex/plex/appdata/config:/config
+      - /home/plex/plex/transcode:/transcode
+      - /home/plex/plex/data:/data
+      - /nfs/media/tv:/tv:ro
+      - /nfs/media/movies:/movies:ro
+      - /nfs/media/music:/music:ro
+    restart: unless-stopped
